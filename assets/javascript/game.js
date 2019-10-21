@@ -68,7 +68,7 @@ $(document).ready(function () {
                 }
             }
             $("#protagonist").append(makeCard(characters[protagonist], "p"))
-            return
+
         } else if (currentOp === -1 & protagonist !== parseInt($(this).attr("char-id"))) {
             console.log("check 1")
             currentOp = parseInt($(this).attr("char-id"))
