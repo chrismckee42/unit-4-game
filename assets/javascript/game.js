@@ -50,29 +50,34 @@ $(document).ready(function () {
 
 
     $(".char").on("click", function () {
-
+        console.log("check q")
         if (protagonist === -1) {
 
             protagonist = parseInt($(this).attr("char-id"))
 
             $("#instructions").empty()
             $("#instructions").html("<h3>Pick an opponent:</h3>")
-            for (let i = 0; i < characters.length; i++) {
-                if (i !== protagonist) {
-                    opponents.push(characters[i])
-                }
-            }
             $("#characters").empty()
 
-            for (let i = 0; i < opponents.length; i++) {
+            for (let i = 0; i < characters.length; i++) {
+                if (i !== protagonist) {
+                    const newChar = makeCard(characters[i], "o")
+                    newChar.attr("char-id", i)
+                    $("#characters").append(newChar)
 
-                const newChar = makeCard(opponents[i], "o")
-                newChar.attr("opp-id", i)
-                $("#characters").append(newChar)
+                }
             }
             $("#protagonist").append(makeCard(characters[protagonist], "p"))
-        } else if (currentOp === -1) {
+            return
+        } else if (currentOp === -1 & protagonist !== parseInt($(this).attr("char-id"))) {
+            console.log("check 1")
+            currentOp = parseInt($(this).attr("char-id"))
+            $("#instructions").empty()
+            $("#instructions").html("<h3>Defeat your Opponent!</h3>")
+            $("#defender").append(makeCard(characters[currentOp], "o"))
 
+        } else {
+            console.log("check 2")
         }
 
     })
