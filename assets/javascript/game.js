@@ -34,8 +34,9 @@ var opponents = {}
 var currentOp
 
 for (let i = 0; i < characters.length; i++) {
-
-    $("#characters").append(makeCard(characters[i]))
+    const newChar = makeCard(characters[i])
+    newChar.attr("char-id", i)
+    $("#characters").append(newChar)
 }
 
 $(document).ready(function () {
@@ -46,8 +47,8 @@ $(document).ready(function () {
 
     $(".char").on("click", function () {
         // var clicked = $("<div>")
-        console.log(this)
-        console.log($("<div>"))
+        console.log($(this).attr("char-id"))
+
     })
 
 
