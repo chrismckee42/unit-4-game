@@ -15,7 +15,7 @@ characters[1] = new Character("Anakin Skywalker", "Anakin.jpg", 100, 1, 1, "anak
 characters[2] = new Character("Obi-Wan Kenobi", "Obi-Wan.jpg", 100, 1, 1, "obi-wan")
 characters[3] = new Character("Qui-Gon Jinn", "Qui-Gon-Jinn.jpg", 100, 1, 1, "qui-gon")
 
-function makeCard(obj) {
+function makeCard(obj, id) {
     const newChar = $("<div>");
     newChar.addClass("col char " + obj.myClass)
     const stats = $("<div>");
@@ -23,35 +23,59 @@ function makeCard(obj) {
     newChar.append('<img src="assets/images/' + obj.image + '" alt="Jar-Jar">')
     newChar.append('<div>' + obj.name + '</div>')
     stats.append('<div>HP: ' + obj.hp + '</div>')
-    stats.append('<div>Attack: ' + obj.att + '</div>')
-    stats.append('<div>Counter Attack: ' + obj.conatt + '</div>')
+    if (id === "c" || id === "p") {
+        stats.append('<div>Attack: ' + obj.att + '</div>')
+    }
+    if (id === "c" || id === "o") {
+        stats.append('<div>Counter Attack: ' + obj.conatt + '</div>')
+    }
+
     newChar.append(stats)
     return newChar
 }
 
-var protagonist
-var opponents = {}
-var currentOp
+var protagonist = -1
+var opponents = []
+var currentOp = -1
+
+$("#instructions").html("<h3>Choose Character:</h3>")
 
 for (let i = 0; i < characters.length; i++) {
-    const newChar = makeCard(characters[i])
+    const newChar = makeCard(characters[i], "c")
     newChar.attr("char-id", i)
     $("#characters").append(newChar)
 }
 
 $(document).ready(function () {
 
-    //$(".characters").html
-
-
 
     $(".char").on("click", function () {
-        // var clicked = $("<div>")
-        console.log($(this).attr("char-id"))
+
+        if (protagonist === -1) {
+
+            protagonist = parseInt($(this).attr("char-id"))
+
+            $("#instructions").empty()
+            $("#instructions").html("<h3>Pick an opponent:</h3>")
+            for (let i = 0; i < characters.length; i++) {
+                if (i !== protagonist) {
+                    opponents.push(characters[i])
+                }
+            }
+            $("#characters").empty()
+
+            for (let i = 0; i < opponents.length; i++) {
+
+                const newChar = makeCard(opponents[i], "o")
+                newChar.attr("opp-id", i)
+                $("#characters").append(newChar)
+            }
+            $("#protagonist").append(makeCard(characters[protagonist], "p"))
+        } else if (currentOp === -1) {
+
+        }
 
     })
-
-
 
 
 
