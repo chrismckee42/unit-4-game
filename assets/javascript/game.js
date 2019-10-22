@@ -11,10 +11,10 @@ class Character {
 }
 
 const characters = []
-characters[0] = new Character("Jar Jar Binks", "Jar-Jar-Binks.jpg", 100, 1, 2, "jar-jar")
-characters[1] = new Character("Anakin Skywalker", "Anakin.jpg", 100, 2, 3, "anakin")
-characters[2] = new Character("Obi-Wan Kenobi", "Obi-Wan.jpg", 100, 3, 4, "obi-wan")
-characters[3] = new Character("Qui-Gon Jinn", "Qui-Gon-Jinn.jpg", 100, 4, 5, "qui-gon")
+characters[0] = new Character("Jar Jar Binks", "Jar-Jar-Binks.jpg", 1000, 2, 4, "jar-jar")
+characters[1] = new Character("Anakin Skywalker", "Anakin.jpg", 100, 3, 4, "anakin")
+characters[2] = new Character("Obi-Wan Kenobi", "Obi-Wan.jpg", 300, 4, 6, "obi-wan")
+characters[3] = new Character("Qui-Gon Jinn", "Qui-Gon-Jinn.jpg", 200, 5, 8, "qui-gon")
 
 function makeCard(obj, id) {
     const newChar = $("<div>");
@@ -71,16 +71,18 @@ function intitialize() {
             }
             $("#protagonist").append(makeCard(characters[protagonist], "p"))
 
-        } else if (currentOp === -1 & protagonist !== parseInt($(this).attr("char-id"))) {
-            //console.log("check 1")
+        } else if (currentOp === -1 &
+            protagonist !== parseInt($(this).attr("char-id")) &
+            dead.indexOf(parseInt($(this).attr("char-id"))) === -1) {
+            console.log("check 1")
             currentOp = parseInt($(this).attr("char-id"))
             $("#instructions").empty()
             $("#instructions").html("<h3>Defeat your Opponent!</h3>")
             $("#characters").empty()
-
+            $("#defender").empty()
             $("#defender").append(makeCard(characters[currentOp], "o"))
             for (let i = 0; i < characters.length; i++) {
-                if (i !== protagonist & i !== currentOp) {
+                if (i !== protagonist & i !== currentOp & dead.indexOf(i) === -1) {
                     const newChar = makeCard(characters[i], "o")
                     newChar.attr("char-id", i)
                     $("#characters").append(newChar)
@@ -108,12 +110,21 @@ $(document).ready(function () {
                 characters[currentOp].hp = 0
                 $("#defender").empty()
                 $("#defender").append(makeCard(characters[currentOp], "o"))
+                dead.push(currentOp)
                 currentOp = -1
+                $("#instructions").empty()
+                if (dead.length === 3) {
+                    $("#instructions").html("<h3>You Win!</h3>")
+                } else {
+                    $("#instructions").html("<h3>Select New Opponent!</h3>")
+                }
             } else {
                 characters[protagonist].hp -= characters[currentOp].conatt
                 if (characters[protagonist].hp <= 0) {
                     // you died
                     characters[protagonist].hp = 0
+                    $("#instructions").empty()
+                    $("#instructions").html("<h3>You Died! Game Over!</h3>")
                 } else {
 
                 }
