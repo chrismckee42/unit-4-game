@@ -46,8 +46,8 @@ for (let i = 0; i < characters.length; i++) {
     $("#characters").append(newChar)
 }
 
-$(document).ready(function () {
 
+function intitialize() {
 
     $(".char").on("click", function () {
         console.log("check q")
@@ -80,8 +80,11 @@ $(document).ready(function () {
             console.log("check 2")
         }
 
+        intitialize()
     })
+}
 
-
+$(document).ready(function () {
+    intitialize()
 
 })
