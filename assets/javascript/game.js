@@ -4,16 +4,17 @@ class Character {
         this.image = image;
         this.hp = hp;
         this.att = att;
+        this.baseAtt = att;
         this.conatt = conatt;
         this.myClass = myClass;
     }
 }
 
 const characters = []
-characters[0] = new Character("Jar Jar Binks", "Jar-Jar-Binks.jpg", 100, 1, 1, "jar-jar")
-characters[1] = new Character("Anakin Skywalker", "Anakin.jpg", 100, 1, 1, "anakin")
-characters[2] = new Character("Obi-Wan Kenobi", "Obi-Wan.jpg", 100, 1, 1, "obi-wan")
-characters[3] = new Character("Qui-Gon Jinn", "Qui-Gon-Jinn.jpg", 100, 1, 1, "qui-gon")
+characters[0] = new Character("Jar Jar Binks", "Jar-Jar-Binks.jpg", 100, 1, 2, "jar-jar")
+characters[1] = new Character("Anakin Skywalker", "Anakin.jpg", 100, 2, 3, "anakin")
+characters[2] = new Character("Obi-Wan Kenobi", "Obi-Wan.jpg", 100, 3, 4, "obi-wan")
+characters[3] = new Character("Qui-Gon Jinn", "Qui-Gon-Jinn.jpg", 100, 4, 5, "qui-gon")
 
 function makeCard(obj, id) {
     const newChar = $("<div>");
@@ -35,8 +36,9 @@ function makeCard(obj, id) {
 }
 
 var protagonist = -1
-var opponents = []
+var dead = []
 var currentOp = -1
+var gameOver = false
 
 $("#instructions").html("<h3>Choose Character:</h3>")
 
@@ -50,7 +52,7 @@ for (let i = 0; i < characters.length; i++) {
 function intitialize() {
 
     $(".char").on("click", function () {
-        console.log("check q")
+        //console.log("check q")
         if (protagonist === -1) {
 
             protagonist = parseInt($(this).attr("char-id"))
@@ -70,12 +72,21 @@ function intitialize() {
             $("#protagonist").append(makeCard(characters[protagonist], "p"))
 
         } else if (currentOp === -1 & protagonist !== parseInt($(this).attr("char-id"))) {
-            console.log("check 1")
+            //console.log("check 1")
             currentOp = parseInt($(this).attr("char-id"))
             $("#instructions").empty()
             $("#instructions").html("<h3>Defeat your Opponent!</h3>")
-            $("#defender").append(makeCard(characters[currentOp], "o"))
+            $("#characters").empty()
 
+            $("#defender").append(makeCard(characters[currentOp], "o"))
+            for (let i = 0; i < characters.length; i++) {
+                if (i !== protagonist & i !== currentOp) {
+                    const newChar = makeCard(characters[i], "o")
+                    newChar.attr("char-id", i)
+                    $("#characters").append(newChar)
+
+                }
+            }
         } else {
             console.log("check 2")
         }
@@ -87,4 +98,32 @@ function intitialize() {
 $(document).ready(function () {
     intitialize()
 
+    $("#attack").on("click", function () {
+        if (currentOp !== -1) {
+            console.log(characters[protagonist].att)
+            characters[currentOp].hp -= characters[protagonist].att
+            characters[protagonist].att += characters[protagonist].baseAtt
+            if (characters[currentOp].hp <= 0) {
+                // pick new opponent
+                characters[currentOp].hp = 0
+                $("#defender").empty()
+                $("#defender").append(makeCard(characters[currentOp], "o"))
+                currentOp = -1
+            } else {
+                characters[protagonist].hp -= characters[currentOp].conatt
+                if (characters[protagonist].hp <= 0) {
+                    // you died
+                    characters[protagonist].hp = 0
+                } else {
+
+                }
+                $("#defender").empty()
+                $("#defender").append(makeCard(characters[currentOp], "o"))
+            }
+            $("#protagonist").empty()
+            $("#protagonist").append(makeCard(characters[protagonist], "p"))
+        }
+        //console.log("attack")
+        //intitialize()
+    })
 })
